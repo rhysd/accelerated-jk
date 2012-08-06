@@ -1,3 +1,10 @@
-This is vim plugin to accelerate up-down moving.
-This plugin is in testing.
-Please check source code directly if you want to know more about this plugin.
+This is vim plugin to accelerate up-down moving (j and k mapping).
+
+Example of setting is below.
+
+nmap <silent>j <Plug>(accelerated_jk_gj)
+nmap <silent>k <Plug>(accelerated_jk_gk)
+
+If you want to change acceleration steps, define g:accelerated_jk_acceleration_table.
+
+This plugin is distributed under MIT License.
