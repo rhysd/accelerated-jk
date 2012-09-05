@@ -39,7 +39,7 @@ function! s:accelerate_gj()
         let s:stage = 0
     endif
 
-    execute "normal ".(s:stage + 1)."gj"
+    execute "normal! ".(s:stage + 1)."gj"
     let s:prev_j = getpos(".")
 
     if s:stage>=s:alen
@@ -61,7 +61,7 @@ function! s:accelerate_gk()
         let s:stage = 0
     endif
 
-    execute "normal ".(s:stage + 1)."gk"
+    execute "normal! ".(s:stage + 1)."gk"
     let s:prev_k = getpos(".")
 
     if s:stage>=s:alen
