@@ -33,6 +33,11 @@ let s:stage = 0
 let s:alen = len(g:accelerated_jk_acceleration_table)
 
 function! s:accelerate_gj()
+    if v:count
+        execute 'normal!' v:count.'gj'
+        return
+    endif
+
     let pos = getpos(".")
     if pos!=s:prev_j
         let s:count = 0
@@ -55,6 +60,11 @@ function! s:accelerate_gj()
 endfunction
 
 function! s:accelerate_gk()
+    if v:count
+        execute 'normal!' v:count.'gk'
+        return
+    endif
+
     let pos = getpos(".")
     if pos!=s:prev_k
         let s:count = 0
@@ -77,6 +87,11 @@ function! s:accelerate_gk()
 endfunction
 
 function! s:accelerate_j()
+    if v:count
+        execute 'normal!' v:count.'j'
+        return
+    endif
+
     let pos = getpos(".")
     if pos!=s:prev_j
         let s:count = 0
@@ -100,6 +115,11 @@ function! s:accelerate_j()
 endfunction
 
 function! s:accelerate_k()
+    if v:count
+        execute 'normal!' v:count.'k'
+        return
+    endif
+
     let pos = getpos(".")
     if pos!=s:prev_k
         let s:count = 0
