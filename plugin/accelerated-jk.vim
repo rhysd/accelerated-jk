@@ -21,7 +21,7 @@ if !exists("g:accelerated_jk_acceleration_table")
     let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
 endif
 
-nnoremap <Plug>(accelerated_jk_gj) :<C-u>call accelerated#exclusive#j()<CR>
-nnoremap <Plug>(accelerated_jk_gk) :<C-u>call accelerated#exclusive#k()<CR>
-nnoremap <Plug>(accelerated_jk_j) :<C-u>call accelerated#inclusive#j()<CR>
-nnoremap <Plug>(accelerated_jk_k) :<C-u>call accelerated#inclusive#k()<CR>
+nnoremap <silent><Plug>(accelerated_jk_gj) :<C-u>call accelerated#exclusive#j()<CR>
+nnoremap <silent><Plug>(accelerated_jk_gk) :<C-u>call accelerated#exclusive#k()<CR>
+nnoremap <silent><Plug>(accelerated_jk_j) :<C-u>call accelerated#inclusive#j()<CR>
+nnoremap <silent><Plug>(accelerated_jk_k) :<C-u>call accelerated#inclusive#k()<CR>
