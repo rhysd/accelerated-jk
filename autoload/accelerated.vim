@@ -17,10 +17,10 @@
 " TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
 " THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-if exists("g:accelerated_exclusive_loaded")
+if exists("g:accelerated_loaded")
     finish
 endif
-let g:accelerated_exclusive_loaded = 1
+let g:accelerated_loaded = 1
 
 let s:prev_j = getpos(".")
 let s:prev_k = getpos(".")
@@ -28,9 +28,9 @@ let s:count = 0
 let s:stage = 0
 let s:alen = len(g:accelerated_jk_acceleration_table)
 
-function! accelerated#exclusive#j()
+function! accelerated#j(exclusive)
     if v:count
-        execute 'normal!' v:count.'gj'
+        execute 'normal!' v:count.(a:exclusive ? 'gj' : 'j')
         return
     endif
 
@@ -40,7 +40,7 @@ function! accelerated#exclusive#j()
         let s:stage = 0
     endif
 
-    execute "normal! ".(s:stage + 1)."gj"
+    execute "normal!" (s:stage + 1).(a:exclusive ? 'gj' : 'j')
     let s:prev_j = getpos(".")
 
     if s:stage>=s:alen
@@ -55,9 +55,9 @@ function! accelerated#exclusive#j()
     endif
 endfunction
 
-function! accelerated#exclusive#k()
+function! accelerated#k(exclusive)
     if v:count
-        execute 'normal!' v:count.'gk'
+        execute 'normal!' v:count.(a:exclusive ? 'gk' : 'k')
         return
     endif
 
@@ -67,7 +67,7 @@ function! accelerated#exclusive#k()
         let s:stage = 0
     endif
 
-    execute "normal! ".(s:stage + 1)."gk"
+    execute "normal!" (s:stage + 1).(a:exclusive ? 'gk' : 'k')
     let s:prev_k = getpos(".")
 
     if s:stage>=s:alen
