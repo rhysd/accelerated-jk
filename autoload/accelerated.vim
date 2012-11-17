@@ -22,6 +22,10 @@ if exists("g:accelerated_loaded")
 endif
 let g:accelerated_loaded = 1
 
+function! s:dec_table_cmp(a, b)
+    return a:a[0] == a:b[0] ? 0 : a:a[0] > a:b[0] ? 1 : -1
+endfunction
+
 let s:prev_j = getpos(".")
 let s:prev_k = getpos(".")
 let s:prev_j_reltime = []
@@ -29,6 +33,7 @@ let s:prev_k_reltime = []
 let s:count = 0
 let s:stage = 0
 let s:alen = len(g:accelerated_jk_acceleration_table)
+let s:dec_table = sort(deepcopy(g:accelerated_jk_deceleration_table), 's:dec_table_cmp')
 
 function! accelerated#j(exclusive)
     if v:count
@@ -89,8 +94,7 @@ function! accelerated#k(exclusive)
 endfunction
 
 function! s:decelerate(dir)
-    let dec_table = g:accelerated_jk_deceleration_table
-    if !empty(dec_table) && !empty(s:prev_{a:dir}_reltime)
+    if !empty(s:dec_table) && !empty(s:prev_{a:dir}_reltime)
         " Calculate delta millisecond.
         let reltimestr = reltimestr(reltime(s:prev_{a:dir}_reltime))
         let [sec, microsec] = matchlist(reltimestr, '\(\d\+\)\.0*\(\d\+\)')[1:2]    " 0* removes leading zeroes.
@@ -98,12 +102,12 @@ function! s:decelerate(dir)
 
         " Find applicable entry.
         let dec = [0, 0, 0]
-        for i in range(len(dec_table))
-            if msec < dec_table[i][0]
-                " Assert dec == dec_table[i-1]
+        for i in range(len(s:dec_table))
+            if msec < s:dec_table[i][0]
+                " Assert dec == s:dec_table[i-1]
                 break
             endif
-            let dec = dec_table[i]
+            let dec = s:dec_table[i]
         endfor
 
         " Subtract dec_count from s:count and s:stage.
