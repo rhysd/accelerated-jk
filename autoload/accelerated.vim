@@ -22,8 +22,9 @@ if exists("g:accelerated_loaded")
 endif
 let g:accelerated_loaded = 1
 
-let s:prev_j = getpos(".")
-let s:prev_k = getpos(".")
+let s:DIR_J = -1
+let s:DIR_K = 1
+let s:direction = 0
 let s:count = 0
 let s:stage = 0
 let s:alen = len(g:accelerated_jk_acceleration_table)
@@ -34,14 +35,13 @@ function! accelerated#j(exclusive)
         return
     endif
 
-    let pos = getpos(".")
-    if pos!=s:prev_j
+    if s:direction!=s:DIR_J
         let s:count = 0
         let s:stage = 0
     endif
 
     execute "normal!" (s:stage + 1).(a:exclusive ? 'gj' : 'j')
-    let s:prev_j = getpos(".")
+    let s:direction = s:DIR_J
 
     if s:stage>=s:alen
         return
@@ -61,14 +61,13 @@ function! accelerated#k(exclusive)
         return
     endif
 
-    let pos = getpos(".")
-    if pos!=s:prev_k
+    if s:direction!=s:DIR_K
         let s:count = 0
         let s:stage = 0
     endif
 
     execute "normal!" (s:stage + 1).(a:exclusive ? 'gk' : 'k')
-    let s:prev_k = getpos(".")
+    let s:direction = s:DIR_K
 
     if s:stage>=s:alen
         return
