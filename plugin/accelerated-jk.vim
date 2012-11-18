@@ -17,14 +17,32 @@
 " TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
 " THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+" Check if deceleration is enabled.
+let g:accelerated_jk_anable_deceleration = get(g:, 'accelerated_jk_anable_deceleration', 0)
+
+" Check acceleration rate.
 if !exists("g:accelerated_jk_acceleration_table")
     let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
 endif
+
+" Reset speed if 1 second has passed.
+" If deceleration is used, default deceleration is set.
+"   - Customizing this table is recomended because checking a gap of time
+"     is affected by OS's key repeat setting and other factors.
+"   - Table is constructed of arrays having two elements.
+"     - first element:  elapsed time after last j/k typed.
+"     - second element: count to decelerate which is used in acceleration
+"       table.
 if !exists("g:accelerated_jk_deceleration_table")
-    let g:accelerated_jk_deceleration_table = []
-    " let g:accelerated_jk_deceleration_table = [[200, 10], [300, 15], [500, 30], [600, 40], [700, 50], [800, 60], [900, 70], [1000, 9999]]
+    if g:accelerated_jk_anable_deceleration
+        let g:accelerated_jk_deceleration_table =
+                    \ [[200, 3], [350, 7], [500, 11], [650, 15], [800, 21], [950, 30], [1100, 35]]
+    else
+        let g:accelerated_jk_deceleration_table = [[1000, 9999]]
+    endif
 endif
 
+" mappings
 nnoremap <silent><Plug>(accelerated_jk_gj) :<C-u>call accelerated#j(1)<CR>
 nnoremap <silent><Plug>(accelerated_jk_gk) :<C-u>call accelerated#k(1)<CR>
 nnoremap <silent><Plug>(accelerated_jk_j) :<C-u>call accelerated#j(0)<CR>
