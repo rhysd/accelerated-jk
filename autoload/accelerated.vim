@@ -26,8 +26,9 @@ function! s:dec_table_cmp(a, b)
     return a:a[0] == a:b[0] ? 0 : a:a[0] > a:b[0] ? 1 : -1
 endfunction
 
-let s:prev_j = getpos(".")
-let s:prev_k = getpos(".")
+let s:DIR_J = -1
+let s:DIR_K = 1
+let s:direction = 0
 let s:prev_j_reltime = []
 let s:prev_k_reltime = []
 let s:count = 0
@@ -41,8 +42,7 @@ function! accelerated#j(exclusive)
         return
     endif
 
-    let pos = getpos(".")
-    if pos!=s:prev_j
+    if s:direction!=s:DIR_J
         let s:count = 0
         let s:stage = 0
     endif
@@ -50,7 +50,7 @@ function! accelerated#j(exclusive)
     call s:decelerate('j')
 
     execute "normal!" (s:stage + 1).(a:exclusive ? 'gj' : 'j')
-    let s:prev_j = getpos(".")
+    let s:direction = s:DIR_J
 
     if s:stage>=s:alen
         return
@@ -70,8 +70,7 @@ function! accelerated#k(exclusive)
         return
     endif
 
-    let pos = getpos(".")
-    if pos!=s:prev_k
+    if s:direction!=s:DIR_K
         let s:count = 0
         let s:stage = 0
     endif
@@ -79,7 +78,7 @@ function! accelerated#k(exclusive)
     call s:decelerate('k')
 
     execute "normal!" (s:stage + 1).(a:exclusive ? 'gk' : 'k')
-    let s:prev_k = getpos(".")
+    let s:direction = s:DIR_K
 
     if s:stage>=s:alen
         return
