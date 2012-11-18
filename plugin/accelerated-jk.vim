@@ -24,10 +24,6 @@ let g:accelerated_jk_anable_deceleration = get(g:, 'accelerated_jk_anable_decele
 if !exists("g:accelerated_jk_acceleration_table")
     let g:accelerated_jk_acceleration_table = [10,7,5,4,3,2,2,2]
 endif
-if !exists("g:accelerated_jk_deceleration_table")
-    let g:accelerated_jk_deceleration_table = []
-    " let g:accelerated_jk_deceleration_table = [[200, 10], [300, 15], [500, 30], [600, 40], [700, 50], [800, 60], [900, 70], [1000, 9999]]
-endif
 
 " Reset speed if 1 second has passed.
 " If deceleration is used, default deceleration is set.
