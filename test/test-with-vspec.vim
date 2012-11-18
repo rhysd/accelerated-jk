@@ -15,7 +15,7 @@ describe 'Mapping'
     end
 end
 
-describe 'accelerated_jk_gj'
+describe 'accelerated_jk_gj and accelerated_jk_gk'
     before
         nmap j <Plug>(accelerated_jk_j)
         nmap gj <Plug>(accelerated_jk_gj)
