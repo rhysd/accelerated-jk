@@ -18,7 +18,7 @@
 " THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 " Check if deceleration is enabled.
-let g:accelerated_jk_anable_deceleration = get(g:, 'accelerated_jk_anable_deceleration', 0)
+let g:accelerated_jk_enable_deceleration = get(g:, 'accelerated_jk_enable_deceleration', 0)
 
 " Check acceleration rate.
 if !exists("g:accelerated_jk_acceleration_table")
@@ -34,7 +34,7 @@ endif
 "     - second element: count to decelerate which is used in acceleration
 "       table.
 if !exists("g:accelerated_jk_deceleration_table")
-    if g:accelerated_jk_anable_deceleration
+    if g:accelerated_jk_enable_deceleration
         let g:accelerated_jk_deceleration_table =
                     \ [[200, 3], [350, 7], [500, 11], [650, 15], [800, 21], [950, 30], [1100, 35]]
     else
