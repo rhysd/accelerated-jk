@@ -42,7 +42,7 @@ function! accelerated#j(exclusive)
         return
     endif
 
-    if s:direction!=s:DIR_J
+    if s:direction != s:DIR_J
         let s:count = 0
         let s:stage = 0
     endif
@@ -52,7 +52,7 @@ function! accelerated#j(exclusive)
     execute "normal!" (s:stage + 1).(a:exclusive ? 'gj' : 'j')
     let s:direction = s:DIR_J
 
-    if s:stage>=s:alen
+    if s:stage >= s:alen
         return
     endif
 
@@ -70,7 +70,7 @@ function! accelerated#k(exclusive)
         return
     endif
 
-    if s:direction!=s:DIR_K
+    if s:direction != s:DIR_K
         let s:count = 0
         let s:stage = 0
     endif
@@ -80,7 +80,7 @@ function! accelerated#k(exclusive)
     execute "normal!" (s:stage + 1).(a:exclusive ? 'gk' : 'k')
     let s:direction = s:DIR_K
 
-    if s:stage>=s:alen
+    if s:stage >= s:alen
         return
     endif
 
