@@ -58,7 +58,7 @@ function! accelerated#j(exclusive)
 
     let s:count += 1
 
-    if g:accelerated_jk_acceleration_table[s:stage] < s:count
+    if g:accelerated_jk_acceleration_table[s:stage] <= s:count
         let s:count = 0
         let s:stage += 1
     endif
@@ -86,7 +86,7 @@ function! accelerated#k(exclusive)
 
     let s:count += 1
 
-    if g:accelerated_jk_acceleration_table[s:stage] < s:count
+    if g:accelerated_jk_acceleration_table[s:stage] <= s:count
         let s:count = 0
         let s:stage += 1
     endif

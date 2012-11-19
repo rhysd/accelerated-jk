@@ -34,7 +34,7 @@ describe 'acceleration'
         normal! gg
         for idx in range(len(g:accelerated_jk_acceleration_table))
             let stage = idx + 1
-            for _ in range(g:accelerated_jk_acceleration_table[idx]+1)
+            for _ in range(g:accelerated_jk_acceleration_table[idx])
                 let prev_line = line('.')
                 normal gj
                 Expect prev_line + stage == line('.')
@@ -46,7 +46,7 @@ describe 'acceleration'
         normal! G
         for idx in range(len(g:accelerated_jk_acceleration_table))
             let stage = idx + 1
-            for _ in range(g:accelerated_jk_acceleration_table[idx]+1)
+            for _ in range(g:accelerated_jk_acceleration_table[idx])
                 let prev_line = line('.')
                 normal gk
                 Expect prev_line - stage == line('.')
@@ -121,7 +121,7 @@ describe 'deceleration'
     it 'decelerates cursor when g:accelerated_jk_enable_deceleration is 1'
         execute 1
         function! s:check_deceleration_after(elapsed, step)
-            for _ in range(45)
+            for _ in range(35)
                 normal gj
             endfor
             let before = line('.')
