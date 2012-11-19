@@ -3,10 +3,10 @@ runtime! plugin/accelerated-jk.vim
 
 function! GenRand(max)
     let rand = system('echo $RANDOM')
-    return rand=='' ? localtime() % a:max : rand % a:max
+    return (rand=='' ? localtime() : rand) % a:max
 endfunction
 
-describe 'Mapping'
+describe 'default values and mappings'
     it 'provides default <Plug> mappings'
         Expect maparg('<Plug>(accelerated_jk_gj)') != ''
         Expect maparg('<Plug>(accelerated_jk_gk)') != ''
@@ -105,8 +105,10 @@ describe 'deceleration'
         new
         0read! for i in `seq 1000`; do; echo $i; done
         unlet! g:accelerated_jk_deceleration_table
+        unlet! g:accelerated_loaded
         let g:accelerated_jk_enable_deceleration = 1
         runtime! plugin/accelerated-jk.vim
+        runtime! autoload/accelerated.vim
         nmap j <Plug>(accelerated_jk_j)
         nmap gj <Plug>(accelerated_jk_gj)
     end
@@ -119,7 +121,7 @@ describe 'deceleration'
     it 'decelerates cursor when g:accelerated_jk_enable_deceleration is 1'
         execute 1
         function! s:check_deceleration_after(elapsed, step)
-            for _ in range(35)
+            for _ in range(45)
                 normal gj
             endfor
             let before = line('.')
