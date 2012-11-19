@@ -13,9 +13,14 @@ describe 'Mapping'
         Expect maparg('<Plug>(accelerated_jk_j)') != ''
         Expect maparg('<Plug>(accelerated_jk_k)') != ''
     end
+
+    it 'provides default acceleration table and reset setting'
+        Expect g:accelerated_jk_acceleration_table == [10,7,5,4,3,2,2,2]
+        Expect g:accelerated_jk_deceleration_table == [[1000, 9999]]
+    end
 end
 
-describe 'accelerated_jk_gj and accelerated_jk_gk'
+describe 'acceleration'
     before
         nmap j <Plug>(accelerated_jk_j)
         nmap gj <Plug>(accelerated_jk_gj)
@@ -32,7 +37,7 @@ describe 'accelerated_jk_gj and accelerated_jk_gk'
             for _ in range(g:accelerated_jk_acceleration_table[idx]+1)
                 let prev_line = line('.')
                 normal gj
-                Expect prev_line+stage == str2nr(getline('.'))
+                Expect prev_line + stage == line('.')
             endfor
         endfor
     end
@@ -44,7 +49,7 @@ describe 'accelerated_jk_gj and accelerated_jk_gk'
             for _ in range(g:accelerated_jk_acceleration_table[idx]+1)
                 let prev_line = line('.')
                 normal gk
-                Expect prev_line-stage == str2nr(getline('.'))
+                Expect prev_line - stage == line('.')
             endfor
         endfor
     end
@@ -74,7 +79,7 @@ describe 'accelerated_jk_gj and accelerated_jk_gk'
         Expect line('.') == 500
     end
 
-    it 'reset moving when 1 second has passed after last j/k moving'
+    it 'resets moving when 1 second has passed after last j/k moving'
         let start_steps = GenRand(35)
         execute 1
         for _ in range(start_steps)
@@ -92,6 +97,49 @@ describe 'accelerated_jk_gj and accelerated_jk_gk'
         nunmap k
         nunmap gk
         close!
+    end
+end
+
+describe 'deceleration'
+    before
+        new
+        0read! for i in `seq 1000`; do; echo $i; done
+        unlet! g:accelerated_jk_deceleration_table
+        let g:accelerated_jk_enable_deceleration = 1
+        runtime! plugin/accelerated-jk.vim
+        nmap j <Plug>(accelerated_jk_j)
+        nmap gj <Plug>(accelerated_jk_gj)
+    end
+
+    it 'has default deceleration table'
+        Expect g:accelerated_jk_deceleration_table ==
+                    \ [[200,3],[350,7],[500,11],[650,15],[800,21],[950,30],[1100,35]]
+    end
+
+    it 'decelerates cursor when g:accelerated_jk_enable_deceleration is 1'
+        execute 1
+        function! s:check_deceleration_after(elapsed, step)
+            for _ in range(35)
+                normal gj
+            endfor
+            let before = line('.')
+            execute 'sleep' a:elapsed.'m'
+            normal gj
+            Expect line('.') == before + a:step
+        endfunction
+
+        call s:check_deceleration_after(200, 7)
+        call s:check_deceleration_after(500, 4)
+        call s:check_deceleration_after(800, 2)
+
+        delfunction s:check_deceleration_after
+    end
+
+    after
+        nunmap j
+        nunmap gj
+        close!
+        unlet g:accelerated_jk_enable_deceleration
     end
 end
 
