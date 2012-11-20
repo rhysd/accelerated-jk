@@ -3,10 +3,10 @@ runtime! plugin/accelerated-jk.vim
 
 function! GenRand(max)
     let rand = system('echo $RANDOM')
-    return rand=='' ? localtime() % a:max : rand % a:max
+    return (rand=='' ? localtime() : rand) % a:max
 endfunction
 
-describe 'Mapping'
+describe 'default values and mappings'
     it 'provides default <Plug> mappings'
         Expect maparg('<Plug>(accelerated_jk_gj)') != ''
         Expect maparg('<Plug>(accelerated_jk_gk)') != ''
@@ -34,7 +34,7 @@ describe 'acceleration'
         normal! gg
         for idx in range(len(g:accelerated_jk_acceleration_table))
             let stage = idx + 1
-            for _ in range(g:accelerated_jk_acceleration_table[idx]+1)
+            for _ in range(g:accelerated_jk_acceleration_table[idx])
                 let prev_line = line('.')
                 normal gj
                 Expect prev_line + stage == line('.')
@@ -46,7 +46,7 @@ describe 'acceleration'
         normal! G
         for idx in range(len(g:accelerated_jk_acceleration_table))
             let stage = idx + 1
-            for _ in range(g:accelerated_jk_acceleration_table[idx]+1)
+            for _ in range(g:accelerated_jk_acceleration_table[idx])
                 let prev_line = line('.')
                 normal gk
                 Expect prev_line - stage == line('.')
@@ -105,8 +105,10 @@ describe 'deceleration'
         new
         0read! for i in `seq 1000`; do; echo $i; done
         unlet! g:accelerated_jk_deceleration_table
+        unlet! g:accelerated_loaded
         let g:accelerated_jk_enable_deceleration = 1
         runtime! plugin/accelerated-jk.vim
+        runtime! autoload/accelerated.vim
         nmap j <Plug>(accelerated_jk_j)
         nmap gj <Plug>(accelerated_jk_gj)
     end
