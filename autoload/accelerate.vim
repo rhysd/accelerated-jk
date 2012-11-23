@@ -2,17 +2,21 @@ let s:save_cpo = &cpo
 set cpo&vim
 
 " function to compare with sort
-function! s:table_cmp(a, b)
-    return a:a[0] == a:b[0] ? 0 : a:a[0] > a:b[0] ? 1 : -1
+function! s:acc_table_cmp(a, b)
+    return a:a - a:b
+endfunction
+
+function! s:dec_table_cmp(a, b)
+    return a:a[0] - a:b[0]
 endfunction
 
 let s:key_count = 0
-let s:end_of_count = g:accelerated_jk_acceleration_table[-1]
-let s:acceleration_limit = g:accelerated_jk_deceleration_table[0][0]
-let s:acceleration_table = sort(deepcopy(g:accelerated_jk_acceleration_table, 's:table_cmp'))
-let s:deceleration_table = sort(deepcopy(g:accelerated_jk_deceleration_table, 's:table_cmp'))
+let s:acceleration_table = sort(deepcopy(g:accelerated_jk_acceleration_table), 's:acc_table_cmp')
+let s:deceleration_table = [0, 0] + sort(deepcopy(g:accelerated_jk_deceleration_table), 's:dec_table_cmp')
+let s:end_of_count = s:acceleration_table[-1]
 
-delfunction s:table_cmp
+delfunction s:dec_table_cmp
+delfunction s:acc_table_cmp
 
 function! accelerate#cmd(cmd)
 
@@ -29,11 +33,12 @@ function! accelerate#cmd(cmd)
     let msec = sec * 1000 + microsec / 1000
 
     " deceleration!
-    if msec > s:acceleration_limit
+    if msec > g:accelerated_jk_acceleration_limit
         let deceleration_count = s:deceleration_table[-1][1]
-        for [elapsed, dec_count] in s:deceleration_table
-            if elapsed > msec
-                let deceleration_count = dec_count
+        " TODO so dirty
+        for col_idx in range(len(s:deceleration_table))
+            if s:deceleration_table[col_idx][0] > msec
+                let deceleration_count = s:deceleration_table[col_idx-1][1]
                 break
             endif
         endfor

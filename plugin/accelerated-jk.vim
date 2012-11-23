@@ -20,6 +20,7 @@
 
 " Check if deceleration is enabled.
 let g:accelerated_jk_enable_deceleration = get(g:, 'accelerated_jk_enable_deceleration', 0)
+let g:accelerated_jk_acceleration_limit = get(g:, 'accelerated_jk_acceleration_limit', 150)
 
 " Acceleration rate.
 if !exists("g:accelerated_jk_acceleration_table")
@@ -38,7 +39,7 @@ endif
 if !exists("g:accelerated_jk_deceleration_table")
     if g:accelerated_jk_enable_deceleration
         let g:accelerated_jk_deceleration_table =
-                    \ [[150, 3], [300, 7], [450, 11], [600, 15], [750, 23], [900, 28], [1050, 9999]]
+                    \ [[200, 3], [300, 7], [450, 11], [600, 15], [750, 21], [900, 9999]]
     else
         let g:accelerated_jk_deceleration_table = [[150, 9999]]
     endif
