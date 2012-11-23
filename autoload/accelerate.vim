@@ -5,10 +5,6 @@ let s:key_count = 0
 let s:end_of_count = g:accelerated_jk_acceleration_table[-1]
 let s:acceleration_limit = g:accelerated_jk_deceleration_table[0][0]
 
-for cmd in ['j', 'gj', 'k', 'gk']
-    let s:{cmd}_timestamp_micro_seconds = [0, 0]
-endfor
-
 function! accelerate#cmd(cmd)
 
     " TODO
@@ -18,8 +14,9 @@ function! accelerate#cmd(cmd)
         return
     endif
 
+    let previous_timestamp = get(s:, a:cmd.'_timestamp_micro_seconds', [0, 0])
     let current_timestamp = reltime()
-    let [sec, microsec] = reltime(s:{a:cmd}_timestamp_micro_seconds, current_timestamp)
+    let [sec, microsec] = reltime(previous_timestamp, current_timestamp)
     let msec = sec * 1000 + microsec / 1000
 
     " deceleration!

@@ -114,6 +114,7 @@ describe 'deceleration'
         unlet! g:accelerated_jk_deceleration_table
         let g:accelerated_jk_enable_deceleration = 1
         runtime! plugin/accelerated-jk.vim
+        runtime! autoload/accelerate.vim
         nmap j <Plug>(accelerated_jk_j)
         nmap gj <Plug>(accelerated_jk_gj)
         new
