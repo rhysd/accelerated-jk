@@ -95,9 +95,8 @@ endfunction
 function! s:decelerate(dir)
     if !empty(s:dec_table) && !empty(s:prev_{a:dir}_reltime)
         " Calculate delta millisecond.
-        let reltimestr = reltimestr(reltime(s:prev_{a:dir}_reltime))
-        let [sec, microsec] = matchlist(reltimestr, '\(\d\+\)\.0*\(\d\+\)')[1:2]    " 0* removes leading zeroes.
-        let msec = str2nr(sec) * 1000 + str2nr(microsec) / 1000
+        let [sec, microsec] = reltime(s:prev_{a:dir}_reltime)
+        let msec = sec * 1000 + microsec / 1000
 
         " Find applicable entry.
         let dec = [0, 0, 0]
