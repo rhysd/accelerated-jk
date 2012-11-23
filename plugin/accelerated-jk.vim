@@ -106,16 +106,16 @@ function! s:accelerated(cmd)
 
     " acceleration!
     " TODO improve implementation
-    let stage = len(g:accelerated_jk_acceleration_table)
+    let step = len(g:accelerated_jk_acceleration_table)
     for idx in range(len(g:accelerated_jk_acceleration_table))
         if g:accelerated_jk_acceleration_table[idx] > s:key_count
-            let stage= idx+1
+            let step = idx+1
             break
         endif
     endfor
 
     " jump `stage` lines
-    execute 'normal!' (stage).a:cmd
+    execute 'normal!' step.a:cmd
 
     " prepare for next j/k
     if s:key_count < s:end_of_count
