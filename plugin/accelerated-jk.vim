@@ -21,17 +21,9 @@
 " Check if deceleration is enabled.
 let g:accelerated_jk_enable_deceleration = get(g:, 'accelerated_jk_enable_deceleration', 0)
 
-" function to compare with sort
-function! s:table_cmp(a, b)
-    return a:a[0] == a:b[0] ? 0 : a:a[0] > a:b[0] ? 1 : -1
-endfunction
-
 " Acceleration rate.
 if !exists("g:accelerated_jk_acceleration_table")
     let g:accelerated_jk_acceleration_table = [7,12,17,21,24,26,28,30]
-else
-    let g:accelerated_jk_acceleration_table =
-                \ sort(g:accelerated_jk_acceleration_table, 's:table_cmp')
 endif
 
 
@@ -50,9 +42,6 @@ if !exists("g:accelerated_jk_deceleration_table")
     else
         let g:accelerated_jk_deceleration_table = [[150, 9999]]
     endif
-else
-    let g:accelerated_jk_deceleration_table =
-                \ sort(g:accelerated_jk_deceleration_table, 's:table_cmp')
 endif
 
 " mappings

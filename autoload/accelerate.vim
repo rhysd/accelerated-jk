@@ -1,9 +1,18 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" function to compare with sort
+function! s:table_cmp(a, b)
+    return a:a[0] == a:b[0] ? 0 : a:a[0] > a:b[0] ? 1 : -1
+endfunction
+
 let s:key_count = 0
 let s:end_of_count = g:accelerated_jk_acceleration_table[-1]
 let s:acceleration_limit = g:accelerated_jk_deceleration_table[0][0]
+let s:acceleration_table = sort(deepcopy(g:accelerated_jk_acceleration_table, 's:table_cmp'))
+let s:deceleration_table = sort(deepcopy(g:accelerated_jk_deceleration_table, 's:table_cmp'))
+
+delfunction s:table_cmp
 
 function! accelerate#cmd(cmd)
 
@@ -21,8 +30,8 @@ function! accelerate#cmd(cmd)
 
     " deceleration!
     if msec > s:acceleration_limit
-        let deceleration_count = g:accelerated_jk_deceleration_table[-1][1]
-        for [elapsed, dec_count] in g:accelerated_jk_deceleration_table
+        let deceleration_count = s:deceleration_table[-1][1]
+        for [elapsed, dec_count] in s:deceleration_table
             if elapsed > msec
                 let deceleration_count = dec_count
                 break
@@ -34,9 +43,9 @@ function! accelerate#cmd(cmd)
 
     " acceleration!
     " TODO improve implementation
-    let step = len(g:accelerated_jk_acceleration_table)
-    for idx in range(len(g:accelerated_jk_acceleration_table))
-        if g:accelerated_jk_acceleration_table[idx] > s:key_count
+    let step = len(s:acceleration_table)
+    for idx in range(len(s:acceleration_table))
+        if s:acceleration_table[idx] > s:key_count
             let step = idx+1
             break
         endif
