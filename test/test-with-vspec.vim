@@ -15,8 +15,8 @@ describe 'default values and mappings'
     end
 
     it 'provides default acceleration table and reset setting'
-        Expect g:accelerated_jk_acceleration_table == [10,7,5,4,3,2,2,2]
-        Expect g:accelerated_jk_deceleration_table == [[1000, 9999]]
+        Expect g:accelerated_jk_acceleration_table == [7,12,17,21,24,26,28,30]
+        Expect g:accelerated_jk_deceleration_table == [[150, 9999]]
     end
 end
 
@@ -32,25 +32,29 @@ describe 'acceleration'
 
     it 'accelerates j moving'
         normal! gg
+        let type_count = 0
         for idx in range(len(g:accelerated_jk_acceleration_table))
             let stage = idx + 1
-            for _ in range(g:accelerated_jk_acceleration_table[idx])
+            while type_count < g:accelerated_jk_acceleration_table[idx]
                 let prev_line = line('.')
                 normal gj
                 Expect prev_line + stage == line('.')
-            endfor
+                let type_count += 1
+            endwhile
         endfor
     end
 
     it 'accelerates k moving'
         normal! G
+        let type_count = 0
         for idx in range(len(g:accelerated_jk_acceleration_table))
             let stage = idx + 1
-            for _ in range(g:accelerated_jk_acceleration_table[idx])
+            while type_count < g:accelerated_jk_acceleration_table[idx]
                 let prev_line = line('.')
                 normal gk
                 Expect prev_line - stage == line('.')
-            endfor
+                let type_count += 1
+            endwhile
         endfor
     end
 
@@ -79,14 +83,19 @@ describe 'acceleration'
         Expect line('.') == 500
     end
 
-    it 'resets moving when 1 second has passed after last j/k moving'
-        let start_steps = GenRand(35)
-        execute 1
+    it 'resets moving when 150 mille seconds have passed after last j/k moving'
+        let start_steps = GenRand(40)
+        normal! gg
         for _ in range(start_steps)
             normal gj
         endfor
+
         let before = line('.')
-        sleep 1
+        normal gj
+        Expect line('.') == before+len(g:accelerated_jk_acceleration_table)
+
+        let before = line('.')
+        sleep 200m
         normal gj
         Expect line('.') == before+1
     end
@@ -102,26 +111,26 @@ end
 
 describe 'deceleration'
     before
-        new
-        0read! for i in `seq 1000`; do; echo $i; done
         unlet! g:accelerated_jk_deceleration_table
-        unlet! g:accelerated_loaded
         let g:accelerated_jk_enable_deceleration = 1
         runtime! plugin/accelerated-jk.vim
-        runtime! autoload/accelerated.vim
         nmap j <Plug>(accelerated_jk_j)
         nmap gj <Plug>(accelerated_jk_gj)
+        new
+        0read! for i in `seq 1000`; do; echo $i; done
     end
 
-    it 'has default deceleration table'
+    it 'has a default deceleration table'
         Expect g:accelerated_jk_deceleration_table ==
-                    \ [[200,3],[350,7],[500,11],[650,15],[800,21],[950,30],[1100,35]]
+                    \ [[150, 3], [300, 7], [450, 11], [600, 15], [750, 23], [900, 28], [1050, 9999]]
     end
 
     it 'decelerates cursor when g:accelerated_jk_enable_deceleration is 1'
-        execute 1
+
         function! s:check_deceleration_after(elapsed, step)
-            for _ in range(35)
+            echo 'check after '.a:elapsed.' msec. '.a:step.' steps is expected.'
+            execute 1
+            for _ in range(30)
                 normal gj
             endfor
             let before = line('.')
@@ -130,9 +139,12 @@ describe 'deceleration'
             Expect line('.') == before + a:step
         endfunction
 
+        call s:check_deceleration_after(100, 8)
         call s:check_deceleration_after(200, 7)
-        call s:check_deceleration_after(500, 4)
+        call s:check_deceleration_after(500, 3)
+        call s:check_deceleration_after(650, 2)
         call s:check_deceleration_after(800, 2)
+        call s:check_deceleration_after(950, 1)
 
         delfunction s:check_deceleration_after
     end
