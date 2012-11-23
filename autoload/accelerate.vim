@@ -1,6 +1,8 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
+" TODO : add foldings and comments
+
 " function to compare with sort
 function! s:acc_table_cmp(a, b)
     return a:a - a:b
@@ -35,7 +37,8 @@ function! accelerate#cmd(cmd)
     " deceleration!
     if msec > g:accelerated_jk_acceleration_limit
         let deceleration_count = s:deceleration_table[-1][1]
-        " TODO so dirty
+        " TODO
+        " below for statement is so dirty
         for col_idx in range(len(s:deceleration_table))
             if s:deceleration_table[col_idx][0] > msec
                 let deceleration_count = s:deceleration_table[col_idx-1][1]
@@ -56,7 +59,7 @@ function! accelerate#cmd(cmd)
         endif
     endfor
 
-    " jump `stage` lines
+    " execute command with step count
     execute 'normal!' step.a:cmd
 
     " prepare for next j/k
