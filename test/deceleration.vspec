@@ -40,6 +40,7 @@ describe 'deceleration'
             echo 'passed: check after '.a:elapsed.' msec. '.a:step.' steps is expected.'
         endfunction
 
+        "                               msec steps
         call s:check_deceleration_after(100, 8)
         call s:check_deceleration_after(250, 7)
         call s:check_deceleration_after(500, 4)
