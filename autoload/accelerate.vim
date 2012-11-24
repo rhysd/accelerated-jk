@@ -4,23 +4,29 @@ set cpo&vim
 " TODO : add foldings and comments
 
 " function to compare with sort
-function! s:acc_table_cmp(a, b)
+function! s:acc_table_cmp(a, b) "{{{
     return a:a - a:b
 endfunction
 
 function! s:dec_table_cmp(a, b)
     return a:a[0] - a:b[0]
 endfunction
+"}}}
 
+" script-local variables "{{{
 let s:key_count = 0
 let s:acceleration_table = sort(deepcopy(g:accelerated_jk_acceleration_table), 's:acc_table_cmp')
 let s:deceleration_table = [0, 0] + sort(deepcopy(g:accelerated_jk_deceleration_table), 's:dec_table_cmp')
 let s:end_of_count = s:acceleration_table[-1]
+"}}}
 
+" delete functions to sort "{{{
 delfunction s:dec_table_cmp
 delfunction s:acc_table_cmp
+"}}}
 
-function! accelerate#cmd(cmd)
+" accelerate {cmd} by time
+function! accelerate#cmd(cmd) "{{{
 
     " TODO
     " This is temporary implementation.
@@ -29,6 +35,7 @@ function! accelerate#cmd(cmd)
         return
     endif
 
+    " check timestamp
     let previous_timestamp = get(s:, a:cmd.'_timestamp_micro_seconds', [0, 0])
     let current_timestamp = reltime()
     let [sec, microsec] = reltime(previous_timestamp, current_timestamp)
@@ -68,6 +75,7 @@ function! accelerate#cmd(cmd)
     endif
     let s:{a:cmd}_timestamp_micro_seconds = current_timestamp
 endfunction
+"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo

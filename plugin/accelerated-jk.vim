@@ -18,11 +18,15 @@
 " THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
+" Initialization of variables {{{
 " Check if deceleration is enabled.
 let g:accelerated_jk_enable_deceleration = get(g:, 'accelerated_jk_enable_deceleration', 0)
 let g:accelerated_jk_acceleration_limit = get(g:, 'accelerated_jk_acceleration_limit', 150)
 
 " Acceleration rate.
+"   - Indices + 1 represent steps of j/k mappings.
+"   - Values represent required number of typing j/k to advance steps.
+" For example, if type 'j' 7 times and type 'j', it move cursor 2 lines.
 if !exists("g:accelerated_jk_acceleration_table")
     let g:accelerated_jk_acceleration_table = [7,12,17,21,24,26,28,30]
 endif
@@ -44,9 +48,11 @@ if !exists("g:accelerated_jk_deceleration_table")
         let g:accelerated_jk_deceleration_table = [[150, 9999]]
     endif
 endif
+"}}}
 
-" mappings
+" Default mappings {{{
 nnoremap <silent><Plug>(accelerated_jk_gj) :<C-u>call accelerate#cmd('gj')<CR>
 nnoremap <silent><Plug>(accelerated_jk_gk) :<C-u>call accelerate#cmd('gk')<CR>
 nnoremap <silent><Plug>(accelerated_jk_j)  :<C-u>call accelerate#cmd('j')<CR>
 nnoremap <silent><Plug>(accelerated_jk_k)  :<C-u>call accelerate#cmd('k')<CR>
+"}}}
