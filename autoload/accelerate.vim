@@ -23,6 +23,35 @@ delfunction s:dec_table_cmp
 delfunction s:acc_table_cmp
 "}}}
 
+" decelerate key typing count
+function! s:deceleration(delay) "{{{
+    let deceleration_count = s:deceleration_table[-1][1]
+    let prev_dec_count = 0
+    for [elapsed, dec_count] in s:deceleration_table
+        if elapsed > a:delay
+            let deceleration_count = prev_dec_count
+            break
+        else
+            let prev_dec_count = dec_count
+        endif
+    endfor
+    let s:key_count = s:key_count - deceleration_count < 0 ?
+                        \ 0 : s:key_count - deceleration_count
+endfunction
+"}}}
+
+" calculate j/k jump step
+function! s:acceleration() "{{{
+    let len = len(s:acceleration_table)
+    for idx in range(len)
+        if s:acceleration_table[idx] > s:key_count
+            return idx + 1
+        endif
+    endfor
+    return len
+endfunction
+"}}}
+
 " accelerate {cmd} by time
 function! accelerate#cmd(cmd) "{{{
 
@@ -39,31 +68,11 @@ function! accelerate#cmd(cmd) "{{{
     let [sec, microsec] = reltime(previous_timestamp, current_timestamp)
     let msec = sec * 1000 + microsec / 1000
 
-    " deceleration!
     if msec > g:accelerated_jk_acceleration_limit
-        let deceleration_count = s:deceleration_table[-1][1]
-        let prev_dec_count = 0
-        for [elapsed, dec_count] in s:deceleration_table
-            if elapsed > msec
-                let deceleration_count = prev_dec_count
-                break
-            else
-                let prev_dec_count = dec_count
-            endif
-        endfor
-        let s:key_count = s:key_count - deceleration_count < 0 ?
-                            \ 0 : s:key_count - deceleration_count
+        call s:deceleration(msec)
     endif
 
-    " acceleration!
-    " TODO improve implementation
-    let step = len(s:acceleration_table)
-    for idx in range(len(s:acceleration_table))
-        if s:acceleration_table[idx] > s:key_count
-            let step = idx+1
-            break
-        endif
-    endfor
+    let step = s:acceleration()
 
     " execute command with step count
     execute 'normal!' step.a:cmd
