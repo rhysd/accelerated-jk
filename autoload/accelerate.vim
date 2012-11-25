@@ -1,8 +1,6 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-" TODO : add foldings and comments
-
 " function to compare with sort
 function! s:acc_table_cmp(a, b) "{{{
     return a:a - a:b
@@ -16,7 +14,7 @@ endfunction
 " script-local variables "{{{
 let s:key_count = 0
 let s:acceleration_table = sort(deepcopy(g:accelerated_jk_acceleration_table), 's:acc_table_cmp')
-let s:deceleration_table = [0, 0] + sort(deepcopy(g:accelerated_jk_deceleration_table), 's:dec_table_cmp')
+let s:deceleration_table = sort(deepcopy(g:accelerated_jk_deceleration_table), 's:dec_table_cmp')
 let s:end_of_count = s:acceleration_table[-1]
 "}}}
 
@@ -44,12 +42,13 @@ function! accelerate#cmd(cmd) "{{{
     " deceleration!
     if msec > g:accelerated_jk_acceleration_limit
         let deceleration_count = s:deceleration_table[-1][1]
-        " TODO
-        " below for statement is so dirty
-        for col_idx in range(len(s:deceleration_table))
-            if s:deceleration_table[col_idx][0] > msec
-                let deceleration_count = s:deceleration_table[col_idx-1][1]
+        let prev_dec_count = 0
+        for [elapsed, dec_count] in s:deceleration_table
+            if elapsed > msec
+                let deceleration_count = prev_dec_count
                 break
+            else
+                let prev_dec_count = dec_count
             endif
         endfor
         let s:key_count = s:key_count - deceleration_count < 0 ?
