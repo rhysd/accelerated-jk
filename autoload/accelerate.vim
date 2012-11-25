@@ -41,7 +41,7 @@ endfunction
 "}}}
 
 " calculate j/k jump step
-function! s:acceleration() "{{{
+function! s:acceleration_step() "{{{
     let len = len(s:acceleration_table)
     for idx in range(len)
         if s:acceleration_table[idx] > s:key_count
@@ -72,7 +72,7 @@ function! accelerate#cmd(cmd) "{{{
         call s:deceleration(msec)
     endif
 
-    let step = s:acceleration()
+    let step = s:acceleration_step()
 
     " execute command with step count
     execute 'normal!' step.a:cmd
