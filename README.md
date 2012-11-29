@@ -12,9 +12,19 @@ a proper value. See `plugin/accelerated-jk.vim` to get more information.
 
 Example of setting is below.
 
-```vim
+```VimL
 nmap j <Plug>(accelerated_jk_gj)
 nmap k <Plug>(accelerated_jk_gk)
+```
+
+If you don't want to control acceleration by time, position-driven acceleration is available.
+Using position-driven acceleration makes a cursor move with more light steps than time-driven one makes.
+However the check if j/k is repeated or not is more optimistic.
+If you want to use position-driven acceleration, a setting would be like below.
+
+```VimL
+nmap j <Plug>(accelerated_jk_gj_position)
+nmap k <Plug>(accelerated_jk_gk_position)
 ```
 
 This plugin is distributed under MIT License.
