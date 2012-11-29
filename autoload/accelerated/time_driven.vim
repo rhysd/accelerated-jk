@@ -53,7 +53,7 @@ endfunction
 "}}}
 
 " accelerate {cmd} by time
-function! time_driven#acceleration(cmd) "{{{
+function! accelerated#time_driven#command(cmd) "{{{
 
     " if specified count, move like original j/k command
     if v:count
