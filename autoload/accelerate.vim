@@ -55,8 +55,7 @@ endfunction
 " accelerate {cmd} by time
 function! accelerate#cmd(cmd) "{{{
 
-    " TODO
-    " This is temporary implementation.
+    " if specified count, move like original j/k command
     if v:count
         execute 'normal!' v:count.a:cmd
         return

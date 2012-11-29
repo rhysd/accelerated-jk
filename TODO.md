@@ -1,2 +1,2 @@
 # Add a document
-# TODOs in autoload/
+# Add position driven acceleration and reset at CursorHold time spent
