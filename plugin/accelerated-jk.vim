@@ -51,8 +51,14 @@ endif
 "}}}
 
 " Default mappings {{{
+" Time driven acceleration
 nnoremap <silent><Plug>(accelerated_jk_gj) :<C-u>call accelerated#time_driven#command('gj')<CR>
 nnoremap <silent><Plug>(accelerated_jk_gk) :<C-u>call accelerated#time_driven#command('gk')<CR>
 nnoremap <silent><Plug>(accelerated_jk_j)  :<C-u>call accelerated#time_driven#command('j')<CR>
 nnoremap <silent><Plug>(accelerated_jk_k)  :<C-u>call accelerated#time_driven#command('k')<CR>
+" Position driven acceleration
+nnoremap <silent><Plug>(accelerated_jk_gj_position) :<C-u>call accelerated#position_driven#command('gj')<CR>
+nnoremap <silent><Plug>(accelerated_jk_gk_position) :<C-u>call accelerated#position_driven#command('gk')<CR>
+nnoremap <silent><Plug>(accelerated_jk_j_position)  :<C-u>call accelerated#position_driven#command('j')<CR>
+nnoremap <silent><Plug>(accelerated_jk_k_position)  :<C-u>call accelerated#position_driven#command('k')<CR>
 "}}}
