@@ -4,18 +4,20 @@ Author : rhysd <lin90162@yahoo.co.jp>
 
 CONTENTS		*accelerated-jk-contents*
 
-Introduction		|accelerated-jk-introduction|
+Introduction	|accelerated-jk-introduction|
 Usage			|accelerated-jk-usage|
 Install			|accelerated-jk-install|
-Acceleration		|accelerated-jk-acceleration|
-Deceleration		|accelerated-jk-deceleration|
+Acceleration	|accelerated-jk-acceleration|
+	Variables		|accelerated-jk-acceleration-variables|
+Deceleration	|accelerated-jk-deceleration|
+	Variables		|accelerated-jk-deceleration-variables|
 Position-driven Version	|accelerated-jk-position-driven-version|
-Setup Example		|accelerated-jk-setup-example|
+Setup Example	|accelerated-jk-setup-example|
 License			|accelerated-jk-license|
 
 
 ==============================================================================
-INTRODUCTION					 *accelerated-jk-introduction*
+INTRODUCTION									 *accelerated-jk-introduction*
 
 This plugin accelerates |j|/|k| mappings' steps while |j| or |k| key is
 repeating. When the interval of key-repeat interval takes more than 150 ms,
@@ -23,30 +25,37 @@ the step is reset.
 
 
 ==============================================================================
-USAGE							*accelerated-jk-usage*
+USAGE													*accelerated-jk-usage*
 
 
 ==============================================================================
-INSTALL						      *accelerated-jk-install*
+INSTALL												  *accelerated-jk-install*
 
 
 ==============================================================================
-ACCELERATION					 *accelerated-jk-acceleration*
+ACCELERATION									 *accelerated-jk-acceleration*
+
+------------------------------------------------------------------------------
+ACCELERATION VARIABLES				   *accelerated-jk-acceleration-variables*
 
 
 ==============================================================================
-DECELERATION					 *accelerated-jk-deceleration*
+DECELERATION									 *accelerated-jk-deceleration*
 
-==============================================================================
-POSITION-DRIVEN VERSION		      *accelerated-jk-position-driven-version*
-
-
-==============================================================================
-SETUP EXAMPLE					*accelerated-jk-setup-example*
+------------------------------------------------------------------------------
+DECELERATION VARIABLES				   *accelerated-jk-acceleration-variables*
 
 
 ==============================================================================
-LICENSE						      *accelerated-jk-license*
+POSITION-DRIVEN VERSION				  *accelerated-jk-position-driven-version*
+
+
+==============================================================================
+SETUP EXAMPLE									*accelerated-jk-setup-example*
+
+
+==============================================================================
+LICENSE												  *accelerated-jk-license*
 
 |accelerated-jk| is distributed under MIT license.
 
@@ -72,4 +81,4 @@ LICENSE						      *accelerated-jk-license*
 
 
 ==============================================================================
-vim:tw=78:colorcolumn=78:ts=8:ft=help:norl:noet:fen:fdl=0:
+vim:tw=78:colorcolumn=78:ts=4:sw=4:ft=help:norl:noet:fen:fdl=0:
