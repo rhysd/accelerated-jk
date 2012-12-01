@@ -43,7 +43,7 @@ function! s:calc_acceleration_step() "{{{
 endfunction
 "}}}
 
-" accelerate {cmd} by time
+" accelerate {cmd} by position
 function! accelerated#position_driven#command(cmd) "{{{
     if v:count
         execute 'normal!' v:count.a:cmd
