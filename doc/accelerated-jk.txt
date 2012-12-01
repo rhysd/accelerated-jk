@@ -12,20 +12,31 @@ Acceleration	|accelerated-jk-acceleration|
 Deceleration	|accelerated-jk-deceleration|
 	Variables		|accelerated-jk-deceleration-variables|
 Position-driven Version	|accelerated-jk-position-driven-version|
-Setup Example	|accelerated-jk-setup-example|
+Mappings		|accelerated-jk-mappings|
 License			|accelerated-jk-license|
 
 
 ==============================================================================
 INTRODUCTION									 *accelerated-jk-introduction*
 
-This plugin accelerates |j|/|k| mappings' steps while |j| or |k| key is
-repeating. When the interval of key-repeat interval takes more than 150 ms,
-the step is reset.
+This plugin accelerates |j|/|k| mappings' steps while |j| or |k| is repeating. 
+When the interval of key-repeat interval takes more than 150 ms, the step is 
+reset.
 
 
 ==============================================================================
 USAGE													*accelerated-jk-usage*
+
+Write below setting to your |vimrc|.
+
+>
+	nmap j <Plug>(accelerated_jk_gj)
+	nmap k <Plug>(accelerated_jk_gk)
+<
+
+Continuing to press |j| or |k| makes a cursor accelerated.
+When you stop pressing |j| or |k| and it takes 15 milli seconds, speed of |j|
+or |k| is reset.
 
 
 ==============================================================================
@@ -51,7 +62,7 @@ POSITION-DRIVEN VERSION				  *accelerated-jk-position-driven-version*
 
 
 ==============================================================================
-SETUP EXAMPLE									*accelerated-jk-setup-example*
+Mappings											 *accelerated-jk-mappings*
 
 
 ==============================================================================
