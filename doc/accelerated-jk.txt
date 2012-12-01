@@ -1,6 +1,7 @@
 *accelerated-jk.txt*
 
-Author : rhysd <lin90162@yahoo.co.jp>
+Author     : rhysd <lin90162@yahoo.co.jp>
+Home Page  : https://github.com/rhysd/accelerated-jk
 
 CONTENTS		*accelerated-jk-contents*
 
@@ -41,6 +42,11 @@ or |k| is reset.
 
 ==============================================================================
 INSTALL												  *accelerated-jk-install*
+
+Extract the file and put files in your Vim directory
+   (usually ~/.vim/ or Program Files/Vim/vimfiles on Windows).
+
+If you use a plugin manager (like vundle, pathogen), see help and follow it.
 
 
 ==============================================================================
