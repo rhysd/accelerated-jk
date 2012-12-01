@@ -19,7 +19,7 @@ describe 'default values and mappings'
     end
 end
 
-describe 'acceleration'
+describe 'position-driven acceleration'
     before
         nmap j <Plug>(accelerated_jk_j_position)
         nmap gj <Plug>(accelerated_jk_gj_position)
@@ -94,8 +94,7 @@ describe 'acceleration'
     end
 
     it 'resets when it takes cursor hold time'
-        SKIP
-        " TODO how do I test a feature using updatetime event?
+        SKIP 'How can I test a feature using updatetime event?'
         normal! gg
         let updatetime = &updatetime
         set updatetime=100
