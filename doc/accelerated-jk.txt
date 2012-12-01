@@ -20,7 +20,7 @@ License			|accelerated-jk-license|
 ==============================================================================
 INTRODUCTION									 *accelerated-jk-introduction*
 
-This plugin accelerates |j|/|k| mappings' steps while |j| or |k| is repeating. 
+*accelerated-jk* accelerates |j|/|k| mappings' steps while |j| or |k| is repeating. 
 When the interval of key-repeat interval takes more than 150 ms, the step is 
 reset.
 
@@ -44,7 +44,7 @@ or |k| is reset.
 INSTALL												  *accelerated-jk-install*
 
 Extract the file and put files in your Vim directory
-   (usually ~/.vim/ or Program Files/Vim/vimfiles on Windows).
+(usually ~/.vim/ or Program Files/Vim/vimfiles on Windows).
 
 If you use a plugin manager (like vundle, pathogen), see help and follow it.
 
@@ -52,8 +52,20 @@ If you use a plugin manager (like vundle, pathogen), see help and follow it.
 ==============================================================================
 ACCELERATION									 *accelerated-jk-acceleration*
 
+Rate of acceleration with |j| and |k| is controled by
+|g:accelerated_jk_acceleration_table|. 
+If the elapsed time from using |j|/|k| previously is fit in 
+|g:accelerated_jk_acceleration_limit| milli seconds, a count is incremented.
+When the count goes over some bounds, the step of |j|/|k| is incremented. The
+bounds are defined as the value of list, |g:accelerated_jk_acceleration_table|.
+
+
 ------------------------------------------------------------------------------
 ACCELERATION VARIABLES				   *accelerated-jk-acceleration-variables*
+
+g:accelerated_jk_acceleration_limit		 *g:accelerated_jk_acceleration_limit*
+
+g:accelerated_jk_acceleration_table		 *g:accelerated_jk_acceleration_table*
 
 
 ==============================================================================
