@@ -1,0 +1,211 @@
+*accelerated-jk.txt*
+
+Author     : rhysd <lin90162@yahoo.co.jp>
+Home Page  : https://github.com/rhysd/accelerated-jk
+
+CONTENTS		*accelerated-jk-contents*
+
+Introduction	|accelerated-jk-introduction|
+Usage			|accelerated-jk-usage|
+Install			|accelerated-jk-install|
+Acceleration	|accelerated-jk-acceleration|
+	Variables		|accelerated-jk-acceleration-variables|
+Deceleration	|accelerated-jk-deceleration|
+	Variables		|accelerated-jk-deceleration-variables|
+Position-driven Version	|accelerated-jk-position-driven-version|
+Mappings		|accelerated-jk-mappings|
+Example			|accelerated-jk-example|
+License			|accelerated-jk-license|
+
+
+
+==============================================================================
+INTRODUCTION									 *accelerated-jk-introduction*
+
+*accelerated-jk* accelerates |j|/|k| mappings' steps while |j| or |k| is repeating.
+When the interval of key-repeat interval takes more than 150 ms, the step is
+reset.
+
+
+
+==============================================================================
+USAGE													*accelerated-jk-usage*
+
+Write below setting to your |vimrc|.
+
+>
+	nmap j <Plug>(accelerated_jk_gj)
+	nmap k <Plug>(accelerated_jk_gk)
+<
+
+Continuing to press |j| or |k| makes a cursor accelerated.
+When you stop pressing |j| or |k| and it takes 15 milli seconds, speed of |j|
+or |k| is reset.
+
+
+
+==============================================================================
+INSTALL												  *accelerated-jk-install*
+
+Extract the file and put files in your Vim directory
+(usually ~/.vim/ or Program Files/Vim/vimfiles on Windows).
+
+If you use a plugin manager (like vundle, pathogen), see help and follow it.
+
+
+
+==============================================================================
+ACCELERATION									 *accelerated-jk-acceleration*
+
+Rate of acceleration with |j| and |k| is controled by
+|g:accelerated_jk_acceleration_table|.
+
+If the elapsed time from using |j|/|k| previously is fit in
+|g:accelerated_jk_acceleration_limit| milli seconds, a count is incremented.
+When the count goes over some bounds, the step of |j|/|k| is incremented. The
+bounds are defined as the value of list, |g:accelerated_jk_acceleration_table|.
+
+If the elapsed time goes over 150 ms, the count would be reset.
+
+
+
+------------------------------------------------------------------------------
+ACCELERATION VARIABLES				   *accelerated-jk-acceleration-variables*
+
+g:accelerated_jk_acceleration_limit		 *g:accelerated_jk_acceleration_limit*
+
+If key-repeat interval fit in this value, the count for acceleration is
+incremented. A unit is milli seconds and the default value is 150.
+
+
+g:accelerated_jk_acceleration_table		 *g:accelerated_jk_acceleration_table*
+
+A list of bounds. The count for acceleration is incremented and goes over some
+bounds, the step of |j|/|k| is incremented.
+The default value is [7,12,17,21,24,26,28,30].  For example, the number of 
+key-repeat of |j| goes over 7, the step is increased from 1 to 2.
+
+
+
+==============================================================================
+DECELERATION									 *accelerated-jk-deceleration*
+
+If you set |g:accelerated_jk_enable_deceleration| to 1, the decrease of the
+count for acceleration gets more gentle. The rate of deceleration is controled
+by |g:accelerated_jk_deceleration_table|.
+
+
+------------------------------------------------------------------------------
+DECELERATION VARIABLES				   *accelerated-jk-deceleration-variables*
+
+g:accelerated_jk_enable_deceleration	*g:accelerated_jk_enable_deceleration*
+
+If this variable is set to 1, deceleration of a cursor is enabled.
+The default value is 0.
+
+
+g:accelerated_jk_deceleration_table		 *g:accelerated_jk_deceleration_table*
+
+This variable controls deceleration rate. This variable is |List| and its
+elements is |List| whose length is 2. First element of that is elapsed time
+after last |j|/|k| typed. A unit is milli seconds. Second element of that is 
+the amount of count to decrease when the time represented by first element is 
+elased.
+
+The default value is 
+	[[200, 3], [300, 7], [450, 11], [600, 15], [750, 21], [900, 9999]]
+
+For example, If the interval of key-repeat takes 250 ms, the count for
+acceleration would be decreased by 3.
+
+
+==============================================================================
+POSITION-DRIVEN VERSION				  *accelerated-jk-position-driven-version*
+
+If you don't want to control acceleration by time, position-driven acceleration 
+is available. Using position-driven acceleration makes a cursor move with more 
+light steps than time-driven one makes. However the check if j/k is repeated or
+not is more optimistic.
+The step of acceleration would be reset by |CursorHold| and |CursorHoldI|.
+
+If you want to use position-driven acceleration, a setting would be like below
+insteat of setting shown in |accelerated-jk-usage|.
+
+>
+	nmap j <Plug>(accelerated_jk_gj_position)
+	nmap k <Plug>(accelerated_jk_gk_position)
+<
+
+
+==============================================================================
+MAPPINGS											 *accelerated-jk-mappings*
+
+<Plug>(accelerated_jk_gj)						   *<Plug>(accelerated_jk_gj)*
+<Plug>(accelerated_jk_gk)						   *<Plug>(accelerated_jk_gk)*
+
+Accelerated |gj| and |gk|. |exclusive|
+
+<Plug>(accelerated_jk_j)							*<Plug>(accelerated_jk_j)*
+<Plug>(accelerated_jk_k)							*<Plug>(accelerated_jk_k)*
+
+Accelerated |j| and |k|. |inclusive|
+
+<Plug>(accelerated_jk_gj_position)		  *<Plug>(accelerated_jk_gj_position)*
+<Plug>(accelerated_jk_gk_position)		  *<Plug>(accelerated_jk_gk_position)*
+
+Accelerated |gj| and |gk|. Position based acceleration is used instead of
+time-driven one. |exclusive|
+
+<Plug>(accelerated_jk_j_position)		   *<Plug>(accelerated_jk_j_position)*
+<Plug>(accelerated_jk_k_position)		   *<Plug>(accelerated_jk_k_position)*
+
+Accelerated |j| and |k|. Position based acceleration is used instead of
+time-driven one. |inclusive|
+
+
+
+==============================================================================
+EXAMPLE												  *accelerated-jk-example*
+
+>
+	" conservative deceleration 
+	" let g:accelerated_jk_enable_deceleration = 1
+
+	" if default key-repeat interval check(150 ms) is too short
+	" let g:accelerated_jk_acceleration_limit = 250
+
+	" replace j and k mappings
+	nmap j <Plug>(accelerated_jk_gj)
+	nmap k <Plug>(accelerated_jk_gk)
+<
+
+
+
+==============================================================================
+LICENSE												  *accelerated-jk-license*
+
+|accelerated-jk| is distributed under MIT license.
+
+  Copyright (c) 2012 rhysd
+
+  Permission is hereby granted, free of charge, to any person obtaining
+  a copy of this software and associated documentation files (the
+  "Software"), to deal in the Software without restriction, including
+  without limitation the rights to use, copy, modify, merge, publish,
+  distribute, sublicense, and/or sell copies of the Software, and to
+  permit persons to whom the Software is furnished to do so, subject to
+  the following conditions:
+  The above copyright notice and this permission notice shall be
+  included in all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+==============================================================================
+vim: set tw=78:colorcolumn=78:ts=4:sw=4:ft=help:norl:noet:fen:fdl=0:

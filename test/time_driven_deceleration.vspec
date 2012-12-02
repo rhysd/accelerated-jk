@@ -1,0 +1,63 @@
+set rtp +=..
+
+let g:accelerated_jk_enable_deceleration = 1
+runtime! plugin/accelerated-jk.vim
+
+describe 'default values and mappings'
+    it 'provides default <Plug> mappings'
+        Expect maparg('<Plug>(accelerated_jk_gj)') != ''
+        Expect maparg('<Plug>(accelerated_jk_gk)') != ''
+        Expect maparg('<Plug>(accelerated_jk_j)') != ''
+        Expect maparg('<Plug>(accelerated_jk_k)') != ''
+    end
+
+    it 'provides default acceleration table and reset setting'
+        Expect g:accelerated_jk_acceleration_table == [7,12,17,21,24,26,28,30]
+        Expect g:accelerated_jk_deceleration_table ==
+                    \ [[200, 3], [300, 7], [450, 11], [600, 15], [750, 21], [900, 9999]]
+    end
+end
+
+describe 'deceleration'
+    before
+        nmap j <Plug>(accelerated_jk_j)
+        nmap gj <Plug>(accelerated_jk_gj)
+        new
+        0read! for i in `seq 1000`; do; echo $i; done
+    end
+
+    it 'decelerates cursor when g:accelerated_jk_enable_deceleration is 1'
+
+        function! s:check_deceleration_after(elapsed, step)
+            execute 1
+            for _ in range(30)
+                normal gj
+            endfor
+            let before = line('.')
+            execute 'sleep' a:elapsed.'m'
+            normal gj
+            Expect line('.') == before + a:step
+            echo 'passed: check after '.a:elapsed.' msec. '.a:step.' steps is expected.'
+        endfunction
+
+        "                               msec steps
+        call s:check_deceleration_after(100, 8)
+        call s:check_deceleration_after(250, 7)
+        call s:check_deceleration_after(500, 4)
+        call s:check_deceleration_after(650, 3)
+        call s:check_deceleration_after(800, 2)
+        call s:check_deceleration_after(1000, 1)
+        call s:check_deceleration_after(1100, 1)
+
+        delfunction s:check_deceleration_after
+    end
+
+    after
+        nunmap j
+        nunmap gj
+        close!
+        unlet g:accelerated_jk_enable_deceleration
+    end
+end
+
+" vim: set ft=vim fdm=marker ff=unix fileencoding=utf-8:

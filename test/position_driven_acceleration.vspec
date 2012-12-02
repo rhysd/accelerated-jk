@@ -1,0 +1,125 @@
+set rtp +=..
+runtime! plugin/accelerated-jk.vim
+
+function! GenRand(max)
+    let rand = system('echo $RANDOM')
+    return (rand=='' ? localtime() : rand) % a:max
+endfunction
+
+describe 'default values and mappings'
+    it 'provides default <Plug> mappings'
+        Expect maparg('<Plug>(accelerated_jk_gj_position)') != ''
+        Expect maparg('<Plug>(accelerated_jk_gk_position)') != ''
+        Expect maparg('<Plug>(accelerated_jk_j_position)') != ''
+        Expect maparg('<Plug>(accelerated_jk_k_position)') != ''
+    end
+
+    it 'provides default acceleration table and reset setting'
+        Expect g:accelerated_jk_acceleration_table == [7,12,17,21,24,26,28,30]
+    end
+end
+
+describe 'position-driven acceleration'
+    before
+        nmap j <Plug>(accelerated_jk_j_position)
+        nmap gj <Plug>(accelerated_jk_gj_position)
+        nmap k <Plug>(accelerated_jk_k_position)
+        nmap gk <Plug>(accelerated_jk_gk_position)
+        new
+        0read! for i in `seq 1000`; do; echo $i; done
+    end
+
+    it 'accelerates j moving'
+        normal! gg
+        let type_count = 0
+        for idx in range(len(g:accelerated_jk_acceleration_table))
+            let stage = idx + 1
+            while type_count < g:accelerated_jk_acceleration_table[idx]
+                let prev_line = line('.')
+                normal gj
+                Expect prev_line + stage == line('.')
+                let type_count += 1
+            endwhile
+        endfor
+    end
+
+    it 'accelerates k moving'
+        normal! G
+        let type_count = 0
+        for idx in range(len(g:accelerated_jk_acceleration_table))
+            let stage = idx + 1
+            while type_count < g:accelerated_jk_acceleration_table[idx]
+                let prev_line = line('.')
+                normal gk
+                Expect prev_line - stage == line('.')
+                let type_count += 1
+            endwhile
+        endfor
+    end
+
+    it 'provides the same steps in both j and k mapping'
+        for _ in range(10)
+            let start = GenRand(100)
+            let step = GenRand(50)
+            execute start
+            for __ in range(step)
+                normal gj
+            endfor
+            for __ in range(step)
+                normal gk
+            endfor
+            Expect line('.') == start
+        endfor
+    end
+
+    it 'makes j and k repeats no change'
+        execute 500
+        let num = GenRand(50)
+        for _ in range(num)
+            normal gj
+            normal gk
+        endfor
+        Expect line('.') == 500
+    end
+
+    it 'resets when accelerated#position_driven#reset() is called'
+        normal! gg
+        for _ in range(40)
+            normal gj
+        endfor
+        let before = line('.')
+        call accelerated#position_driven#reset()
+        normal! gj
+        Expect before + 1 == line('.')
+    end
+
+    it 'resets when it takes cursor hold time'
+        SKIP 'How can I test a feature using updatetime event?'
+        normal! gg
+        let updatetime = &updatetime
+        set updatetime=100
+
+        for _ in range(40)
+            normal gj
+        endfor
+
+        let before = line('.')
+        let reltime = reltime()[0]
+        while 1
+            if reltime()[0] - reltime > 1
+                break
+            endif
+        endwhile
+        normal gj
+        Expect line('.') == before+1
+        let &updatetime = updatetime
+    end
+
+    after
+        nunmap j
+        nunmap gj
+        nunmap k
+        nunmap gk
+        close!
+    end
+end
