@@ -64,8 +64,9 @@ function! accelerated#time_driven#command(cmd) "{{{
     " check timestamp
     let previous_timestamp = get(s:, a:cmd.'_timestamp_micro_seconds', [0, 0])
     let current_timestamp = reltime()
-    let [sec, microsec] = reltime(previous_timestamp, current_timestamp)
-    let msec = sec * 1000 + microsec / 1000
+    let [delta_head, delta_tail] = split(reltimestr(reltime(
+                \ previous_timestamp, current_timestamp)), '\.')
+    let msec = str2nr(delta_head . delta_tail[0:2])
 
     if msec > g:accelerated_jk_acceleration_limit
         call s:deceleration(msec)
